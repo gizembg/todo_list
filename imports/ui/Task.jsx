@@ -1,11 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 
-
 // Task component - represents a single todo item
 
 export default class Task extends Component {
 
-  render() {           //to get a description of the HTML that this component should display
+  render() {           //to get a description of the HTML that this component should display.Components can also receive data from their parents through attributes called props.
 
     return (
 
