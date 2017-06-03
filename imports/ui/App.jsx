@@ -15,7 +15,7 @@ class App extends Component {
     // Find the text field via the React ref
     const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-    Tasks.insert({
+    Tasks.insert({    // adding a task to the tasks collection
       text,
       createdAt: new Date(), // current time
     });

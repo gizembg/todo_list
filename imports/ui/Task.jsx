@@ -1,14 +1,44 @@
 import React, { Component, PropTypes } from 'react';
+import { Tasks } from '../api/tasks.js';
 
 // Task component - represents a single todo item
 
 export default class Task extends Component {
+	
+	toggleChecked() {
+		// Set the checked property to the opposite of its current value
+		Tasks.update(this.props.task._id, {   //we call Tasks.update to check off a task. two arguments. The first is a selector that identifies a subset of the collection, and the second is an update parameter that specifies what should be done to the matched objects.
+			$set: { checked: !this.props.task.checked },
+		});
+    }
+
+	deleteThisTask() {
+		Tasks.remove(this.props.task._id); //Tasks.remove to delete a task. The remove function takes one argument, a selector that determines which item to remove from the collection.
+	}
+	
 
   render() {           //to get a description of the HTML that this component should display.Components can also receive data from their parents through attributes called props.
+   
+    // Give tasks a different className when they are checked off
+    // so that we can style them nicely in CSS
 
+    const taskClassName = this.props.task.checked ? 'checked' : '';
+    
     return (
+      <li className={taskClassName}>
+        <button className="delete" onClick={this.deleteThisTask.bind(this)}>
+          &times;
+        </button>
 
-      <li>{this.props.task.text}</li>
+        <input
+          type="checkbox"
+          readOnly
+          checked={this.props.task.checked}
+          onClick={this.toggleChecked.bind(this)}
+        />
+
+        <span className="text">{this.props.task.text}</span>
+      </li>
 
     );
 
