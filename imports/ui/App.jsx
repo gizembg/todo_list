@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import { Tasks } from '../api/tasks.js';
 
 import Task from './Task.jsx';
-
+import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+import { Meteor } from 'meteor/meteor';
 // App component - represents the whole app
 
 class App extends Component {
@@ -25,6 +26,8 @@ class App extends Component {
     Tasks.insert({    // adding a task to the tasks collection
       text,
       createdAt: new Date(), // current time
+      owner: Meteor.userId(),           // _id of logged in user
+      username: Meteor.user().username,  // username of logged in user
     });
 
     // Clear form
@@ -71,14 +74,17 @@ class App extends Component {
             Hide Completed Tasks
           </label>
           
+          <AccountsUIWrapper />
           
-          <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-            <input
-              type="text"
-              ref="textInput"
-              placeholder="Type to add new tasks"
-            />
-          </form>
+          { this.props.currentUser ?     
+            <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+              <input
+                type="text"
+                ref="textInput"
+                placeholder="Type to add new tasks"
+              />
+            </form> : ''
+		 }
         </header>
 
 
@@ -100,6 +106,7 @@ App.propTypes = {
 
   tasks: PropTypes.array.isRequired,
   incompleteCount: PropTypes.number.isRequired, //  Display incompleteCount in the header
+  currentUser: PropTypes.object,
 };
 
  
@@ -108,5 +115,6 @@ export default createContainer(() => {
 
   return {          
     tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
-    incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),  }; //Showing a count of incomplete tasks
+    incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),   //Showing a count of incomplete tasks
+	currentUser: Meteor.user()}; //to get information about the currently logged in user
 }, App);
