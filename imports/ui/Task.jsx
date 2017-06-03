@@ -56,4 +56,3 @@ Task.propTypes = {
   task: PropTypes.object.isRequired,
 
 };
-
